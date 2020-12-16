@@ -197,9 +197,10 @@ module.exports = function (context, req) {
     .then(async (data) => {
       logOutput = "Post-verification ";
       context.log(logOutput);
-      var userServiceUpdated = await common.updateUserService(context, data.userId, data.rememberMeId);
-      data.userUpdated = userServiceUpdated;
-      data.verified = data.verified && userServiceUpdated;
+      data.userUpdated = false;
+      if (data.verified) {
+        data.userUpdated = await common.updateUserService(context, data.userId, data.rememberMeId);
+      }
       logOutput = "Post-User Update ";
       context.log(logOutput);
       return completeVerification(context, data);
